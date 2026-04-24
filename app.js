@@ -1,4 +1,4 @@
-﻿const DEFAULT_BACKEND_URL = "http://127.0.0.1:8000";
+﻿const DEFAULT_BACKEND_URL = "https://backend.vermieter.techem.lol";
 const DEFAULT_IMPORT_DIRECTORY = "backend/data/sample_csvs";
 const CHAT_PROVIDER = "gemini";
 const IMPORT_DIRECTORY_STORAGE_KEY = "techem-import-directory";
@@ -1409,11 +1409,3 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
-
-
-
-
-
-
-
-
