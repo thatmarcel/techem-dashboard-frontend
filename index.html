@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Techem Vermieter Dashboard</title>
+    <link rel="stylesheet" href="./styles.css?v=20260424-29" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-logo-shell" aria-label="Techem">
+            <img
+              class="brand-logo"
+              src="https://www.techem.com/content/dam/techem/downloads/newsroom/partner-downloads/Techem_Logo_2017_RGB-226-6-19_Schutzraum%20%281%29.png.coredownload.inline.png"
+              alt="Techem"
+            />
+          </div>
+          <div class="brand-copy">
+            <h1>Vermieter-Dashboard</h1>
+            <p>Heizenergie, CO2, Forecast und Handlungshinweise</p>
+          </div>
+        </div>
+
+        <div class="topbar-panel">
+          <div class="topbar-actions">
+            <div id="hero-status" class="hero-status section-frame topbar-status"></div>
+            <div class="topbar-button-stack">
+              <button id="theme-toggle-button" class="secondary-button theme-button" type="button">Dark Mode</button>
+              <button id="import-toggle-button" class="secondary-button theme-button" type="button">Datenimport</button>
+            </div>
+          </div>
+          <div id="import-panel" class="import-panel section-frame">
+            <div class="import-panel-head">
+              <div>
+                <strong>Datenquelle</strong>
+                <span>CSV-Ordner und Backend-Verbindung für lokale Imports</span>
+              </div>
+            </div>
+            <div class="import-panel-fields">
+              <label class="backend-url-field">
+                <span>CSV-Ordner</span>
+                <input
+                  id="import-directory-input"
+                  type="text"
+                  placeholder="C:\Users\Name\Desktop\Heizdaten"
+                  autocomplete="off"
+                />
+              </label>
+              <label class="backend-url-field">
+                <span>Backend</span>
+                <input id="backend-url-input" type="url" value="http://127.0.0.1:8000" />
+              </label>
+              <button id="import-sample-button" class="primary-button">CSV-Ordner importieren</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="utility-band">
+        <div class="tips-panel section-frame">
+          <div class="section-headline">
+            <h2>Tipps</h2>
+            <span id="tips-status" class="muted-note">Backend verbunden</span>
+          </div>
+          <div id="tips-list" class="tips-list"></div>
+        </div>
+
+        <div class="challenges-panel section-frame">
+          <div class="section-headline">
+            <h2>Challenges</h2>
+            <span class="muted-note">2 aktiv, 2 gesperrt</span>
+          </div>
+          <div id="challenges-list" class="challenge-grid"></div>
+        </div>
+      </section>
+
+      <main class="workspace">
+        <aside class="sidebar section-frame">
+          <div class="sidebar-head">
+            <h2>Bestand</h2>
+            <span id="selection-badge" class="selection-badge">Gesamtbestand</span>
+          </div>
+
+          <div class="search-panel">
+            <label class="field-label" for="search-input">Suche</label>
+            <input
+              id="search-input"
+              class="text-input"
+              type="search"
+              placeholder="Stadt, Straße, Hausnummer oder Wohnung"
+              autocomplete="off"
+            />
+            <div id="suggestions-list" class="suggestions-list"></div>
+          </div>
+
+          <div class="nav-actions">
+            <button id="scope-total-button" class="secondary-button full-width">Gesamtbestand</button>
+          </div>
+
+          <div class="portfolio-hint">
+            <strong>Gebäudemanagement</strong>
+            <span>Stadt, Immobilie und Wohnung bleiben als klare Hierarchie sichtbar.</span>
+          </div>
+
+          <div id="navigation-tree" class="navigation-tree"></div>
+        </aside>
+
+        <section class="main-column">
+          <div class="toolbar section-frame">
+            <div class="toolbar-group">
+              <span class="toolbar-label">Zeitraum</span>
+              <div id="period-switcher" class="segmented-control">
+                <button data-period="day">1T</button>
+                <button data-period="week">1W</button>
+                <button data-period="month" class="is-active">1M</button>
+                <button data-period="quarter">1Q</button>
+                <button data-period="year">1J</button>
+              </div>
+            </div>
+
+            <div class="toolbar-group">
+              <span class="toolbar-label">Navigation</span>
+              <div class="toolbar-nav">
+                <button id="offset-prev-button" class="icon-button" title="Vorheriger Zeitraum">&#9664;</button>
+                <button id="offset-reset-button" class="secondary-button compact-button period-current-button" title="Aktuellen Zeitraum anzeigen">Dieser Monat</button>
+                <button id="offset-next-button" class="icon-button" title="Nächster Zeitraum">&#9654;</button>
+              </div>
+            </div>
+
+            <div class="toolbar-group">
+              <span class="toolbar-label">Analyse</span>
+              <div id="provider-switcher" class="segmented-control">
+                <button data-provider="local">Lokal</button>
+                <button data-provider="vertex" class="is-active">Google Modell</button>
+              </div>
+            </div>
+
+            <div class="toolbar-group toolbar-toggle">
+              <label class="switch-row">
+                <input id="weather-toggle" type="checkbox" checked />
+                <span>Wetterkontext</span>
+              </label>
+            </div>
+          </div>
+
+          <section class="metrics-grid">
+            <article class="metric-card">
+              <span class="metric-label">Energie</span>
+              <strong id="metric-energy" class="metric-value">-</strong>
+              <span id="metric-energy-sub" class="metric-subvalue">-</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">CO2</span>
+              <strong id="metric-co2" class="metric-value">-</strong>
+              <span id="metric-co2-sub" class="metric-subvalue">-</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Kosten</span>
+              <strong id="metric-cost" class="metric-value">-</strong>
+              <span id="metric-cost-sub" class="metric-subvalue">-</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Bestand</span>
+              <strong id="metric-assets" class="metric-value">-</strong>
+              <span id="metric-assets-sub" class="metric-subvalue">-</span>
+            </article>
+          </section>
+
+          <section class="chart-section section-frame">
+            <div class="section-headline">
+              <div>
+                <h2 id="chart-title">Verbrauchsverlauf</h2>
+                <p id="chart-subtitle" class="muted-note">Noch keine Daten geladen</p>
+              </div>
+              <button id="refresh-report-button" class="secondary-button">Report erzeugen</button>
+            </div>
+
+            <div id="series-toggles" class="series-toggles"></div>
+
+            <div class="chart-shell">
+              <div class="chart-axis-label chart-axis-left">kWh</div>
+              <div id="chart-canvas" class="chart-canvas"></div>
+              <div class="chart-axis-label chart-axis-right">kg CO2</div>
+            </div>
+
+            <div id="chart-warning-bar" class="chart-warning-bar"></div>
+
+            <div class="chart-insights-grid">
+              <div class="insight-block">
+                <h3>Auffälligkeiten</h3>
+                <ul id="anomalies-list" class="data-list"></ul>
+              </div>
+              <div class="insight-block">
+                <h3>Einflussfaktoren</h3>
+                <ul id="factors-list" class="data-list"></ul>
+              </div>
+              <div class="insight-block">
+                <h3>Datenquelle</h3>
+                <ul id="data-source-list" class="data-list"></ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="report-section section-frame">
+            <div class="section-headline">
+              <h2>Report</h2>
+              <span id="report-status" class="muted-note">Noch nicht geladen</span>
+            </div>
+
+            <div id="report-content" class="report-content empty-state">
+              Wähle einen Scope oder klicke auf "Report erzeugen".
+            </div>
+          </section>
+        </section>
+
+        <aside class="side-column">
+          <section class="chat-section section-frame">
+            <div class="section-headline">
+              <h2>AI Chat</h2>
+              <label class="switch-row">
+                <input id="chat-scope-toggle" type="checkbox" checked />
+                <span>Nur aktueller Scope</span>
+              </label>
+            </div>
+
+            <div id="chat-context" class="chat-context"></div>
+            <div id="chat-messages" class="chat-messages"></div>
+
+            <form id="chat-form" class="chat-form">
+              <textarea
+                id="chat-input"
+                rows="4"
+                placeholder="Frage nach Ursachen, Entwicklungen oder Auffälligkeiten"
+              ></textarea>
+              <button type="submit" class="primary-button full-width">Frage senden</button>
+            </form>
+          </section>
+
+          <section class="details-section section-frame">
+            <div class="section-headline">
+              <h2>Scope Details</h2>
+              <span id="details-caption" class="muted-note">Metadaten</span>
+            </div>
+            <div id="details-content" class="details-content"></div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./app.js?v=20260424-29"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
